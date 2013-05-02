@@ -1,0 +1,4 @@
+C++ Utility toolbox mainly developed for computer vision related applications. 
+Require OpenCV, Boost
+
+<02-May-2013>
