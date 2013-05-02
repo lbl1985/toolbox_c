@@ -17,6 +17,55 @@ cv::Mat generateRandomW(int featDim, int N){
     return mat;
 }
 
+// read trajectory into memory (without MATLAB operation)
+// only read in trajectory, do not do any extra operation
+void readTraj(const std::string &fileName, std::vector< std::vector< float > > &traj){
+    std::ifstream fs(fileName.c_str(), std::ios::in);
+    int nFeature;
+    int feaDim;
+    
+    if (fs.is_open()) {
+        fs >> nFeature;
+        fs >> feaDim;
+        
+        traj.resize(nFeature);
+        for (int i = 0; i < nFeature; i++) {
+            traj[i].resize(feaDim);
+            for (int j = 0; j < feaDim; j++){
+                fs >> traj[i][j];
+            }
+        }
+    }else{
+        CV_Error(CV_StsBadArg, "could not open " + fileName);
+    }
+    std::cout << "read files: " << fileName << " successful!" << std::endl;
+    fs.close();
+}
+
+arma::fmat readTraj(const std::string &fileName){
+    std::ifstream fs(fileName.c_str(), std::ios::in);
+    int nFeature;
+    int feaDim;
+    
+    arma::fmat traj;
+    if(fs.is_open()){
+        fs >> nFeature;
+        fs >> feaDim;
+        
+        traj.zeros(nFeature, feaDim);
+        for (int i = 0; i < nFeature; i++) {
+            for (int j = 0; j < feaDim; j++) {
+                fs >> traj(i, j);
+            }
+        }
+    }else{
+        CV_Error(CV_StsBadArg, "could not open " + fileName);
+    }
+    std::cout << "read files: " << fileName << " successful!" << std::endl;
+    fs.close();
+    return traj;
+}
+
 // Read in trajectory files
 void readTraj(const std::string &fileName, std::vector< std::vector<float> > &traj, int &nFeature, int &ncenter){
     int feaDim = 32;
@@ -175,15 +224,7 @@ void getTestVideoNames(const std::string &fileName, std::vector<std::string> &te
 
 // get hostName
 boost::filesystem::path getRootPath(){
-	std::string hn;
-#ifdef __APPLE__&&__MACH__
-	hn = boost::asio::ip::host_name();
-#else
-	char myhostname[256]; 
-	int rc = gethostname(myhostname, sizeof myhostname);
-	hn = myhostname;
-#endif
-    
+    std::string hn = boost::asio::ip::host_name();
     boost::filesystem::path p;
     
     if (hn.compare("Binlongs-MacBook-Pro.local") == 0) {
@@ -192,8 +233,14 @@ boost::filesystem::path getRootPath(){
     }else if (hn.compare("binlonglis-imac.wg.neu.edu") == 0){
         boost::filesystem::path tmp("/Users/binlongli/Develop/hrf");
         p = tmp;
-    }else if (hn.compare("binlonglis-imac.local")){
+    }else if (hn.compare("binlonglis-imac.local") == 0){
         boost::filesystem::path tmp("/Users/binlongli/Develop/HRF");
+        p = tmp;
+    }else if(boost::to_upper_copy(hn).compare("ROBUSTLAB-IMAC.WG.NEU.EDU") == 0 || boost::to_upper_copy(hn).compare("ROBUSTLABS-IMAC.LOCAL") == 0){
+        boost::filesystem::path tmp("/Users/robustlab/Develop/HRF");
+        p = tmp;    
+    }else if(hn.compare("NEU-RSL-MacBook-Pro.local") == 0){
+        boost::filesystem::path tmp("/Users/binlong/Develop/HRF/");
         p = tmp;
     }else{
         CV_Error(CV_StsBadFlag, "Does not support " + hn + " machine. Only support Binlongs-MacBook-Pro.local and binlonglis-imac-wg.neu.edu for now.");
@@ -208,6 +255,9 @@ std::string finalPath(const boost::filesystem::path &root, const char *buffer){
     return (root/argPath).string();
 }
 
+// =============================================
+// ============== Data Transform ==============
+// =============================================
 // convert (x, y) sequence to traj of cv::Point2f
 std::vector<cv::Point2f> xy2traj(const std::vector<float> &xy){
     size_t s = xy.size();
@@ -254,6 +304,42 @@ std::vector<float> removeTrajMean(const std::vector<float> &traj){
     tmpVec[s-2] = 0;
     return tmpVec;
 }
+
+// translate armadillo 2D matrix to vector< vector<double> >
+std::vector< std::vector<float> > arma2vec(arma::fmat const &m){
+    std::vector< std::vector<float> > vec;
+    int nRow = m.n_rows;
+    int nCol = m.n_cols;
+    
+    vec.resize(nRow);
+    arma::fmat mt(m.t());
+    for (int i = 0; i < nRow; i++) {
+        std::vector<float> tmpVec(mt.colptr(i), mt.colptr(i) + nCol);
+        vec[i] = tmpVec;
+    }
+    return vec;
+}
+
+// translate armadillo 2D matrix to OpenCV cv::Mat
+cv::Mat arma2cv(arma::fmat &arMat){
+    int nRow = arMat.n_rows;
+    int nCol = arMat.n_cols;
+    
+    cv::Mat cvMatTmp(nCol, nRow, CV_32FC1, arMat.memptr());
+    return cvMatTmp.t();
+}
+
+// translate OpenCV cv::Mat to armadillo 2D matrix
+// only support cvMat is _<float>
+arma::fmat cv2arma(cv::Mat const &cvMat){
+    cv::Mat cvMatTmp(cvMat.t());
+    arma::fmat tmpArMat(cvMatTmp.ptr<float>(), cvMat.rows, cvMat.cols);
+    return tmpArMat;
+}
+
+// =============================================
+// ==================== I/O ====================
+// =============================================
 
 // Save random projection W matrix
 void saveW(const std::string &fileName, const cv::Mat &W){

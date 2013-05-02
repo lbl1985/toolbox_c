@@ -16,13 +16,18 @@
 #include <utility>
 #include <iomanip>
 #include <exception>
+#include <iterator>
 #include <algorithm>
 #include <cmath>
+#include <cstdarg>
 #include <opencv2/opencv.hpp>
+#include <boost/regex.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
+#include <armadillo>
 
 using namespace boost::lambda;
 
@@ -142,6 +147,29 @@ public:
         f[varialbeName] >> mat;
         f.release();
         return true;
-    }
+    }    
 };
+
+// fullfile as in MATLAB
+std::string fullfile(int num, ...);
+
+// helper function for ls
+std::string to_regex_copy(std::string const &mask);
+// ls as in POSIX system
+std::vector<std::string> ls(const std::string pcszMask);
+
+// folderList, return folders under one directory
+std::vector<std::string> folderList(std::string const &inPath);
+// check one path is exist or not, if not create it.
+bool checkFolder(std::string const &path);
+
+// -----------------------------------------------------
+// ---------------      Armadillo System      ---------------
+// -----------------------------------------------------
+
+arma::uvec allIndex(arma::uword s);
+arma::uvec everyNIndex(arma::uword start, arma::uword end, arma::uword step);
+
+
+
 #endif /* defined(__seed__helper__) */

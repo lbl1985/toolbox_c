@@ -113,9 +113,37 @@ bool sort_indexTest(){
     return true;
 }
 
+// -----------------------------------------------------
+// --------------- TEST: FileUtil Class ---------------
+// -----------------------------------------------------
+// ---------------  TEST1: fullfile   -------------
+// -----------------------------------------------------
+bool fullfileTest(){
+    std::string path = fullfile(3, "/Users/herbert19lee/Develop", "HRF", "Util");
+    if (path.compare("/Users/herbert19lee/Develop/HRF/Util") != 0) {
+        return false;
+    }
+    std::cout << path << std::endl;
+    return true;
+}
+
+// -----------------------------------------------------
+// ---------------  TEST2: ls / folderList /checkFolder  -------------
+// -----------------------------------------------------
+// Not Test, just for usage example
+//std::vector<std::string> vec = ls(fullfile(2, "/Users/herbert19lee/Dropbox/Upper_Body_Data/img", "*.jpg"));
+//BOOST_FOREACH(std::string s, vec){
+//    std::cout << s << std::endl;
+//}
+//std::vector<std::string> folders = folderList(fullfile(2, "/Users/herbert19lee/Develop/HRF/MATLAB_Files/data/", "tracklet").c_str());
+//BOOST_FOREACH(std::string str, folders){
+//    std::cout << str << std::endl;
+//}
+//checkFolder(fullfile(3, "/Users/herbert19lee", "Desktop",  "test"));
+
 // main controller function
 int main(){
-    std::string testName("sort_indexTest");
+    std::string testName("fullfileTest");
     
     if (testName.compare("VideoShow") == 0) {
         VideoShowTest();
@@ -129,7 +157,11 @@ int main(){
         combineTwoImagesTest();
     }else if (testName.compare("sort_indexTest") == 0){
         sort_indexTest();
+    }else if (testName.compare("fullfileTest") == 0){
+        fullfileTest();
     }
+    
+    
     return 0;
 }
 

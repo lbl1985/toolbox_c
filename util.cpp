@@ -207,3 +207,94 @@ void FeatureUtil::keptKPId(const std::vector<cv::KeyPoint> &cKP, const std::vect
 // -----------------------------------------------------
 // ---------------      File System      ---------------
 // -----------------------------------------------------
+std::string fullfile(int num, ...){
+    va_list arguments;
+    va_start(arguments, num);
+    
+    boost::filesystem::path p;
+    for (int x = 0; x < num; x++) {
+        p /= va_arg(arguments, char*);
+    }
+    va_end(arguments);
+    
+    return p.make_preferred().native();
+}
+
+std::string to_regex_copy(std::string const &mask){
+    std::string rv = boost::regex_replace( boost::regex_replace( boost::regex_replace( mask, boost::regex( "\\." ), "\\\\." ), boost::regex( "\\?" ), "\\." ), boost::regex( "\\*" ), "\\.*" ) ;
+    return rv;
+}
+
+std::vector<std::string> ls(const std::string pcszMask){
+    namespace fs = boost::filesystem;
+    fs::path path;
+    boost::regex mask;
+    if (fs::is_directory(pcszMask)) {
+        path = pcszMask;
+        mask = ".*";
+    }else{
+        path = fs::path(pcszMask).remove_filename();
+        mask = to_regex_copy(fs::path(pcszMask).filename().string() );
+    }
+    
+    typedef std::vector<fs::path> vec;
+    vec v;
+    std::vector<std::string> rv;
+    
+    std::copy(fs::directory_iterator(path), fs::directory_iterator(), std::back_inserter(v));
+    
+    for (vec::const_iterator it(v.begin()), it_end(v.end()); it != it_end; ++it) {
+        if (boost::regex_match(it->filename().string(), mask)) {
+            rv.push_back(it->filename().string());
+        }
+    }
+    return rv;
+}
+
+std::vector<std::string> folderList(const std::string &inPath){
+    namespace fs = boost::filesystem;
+    fs::path path(inPath);
+    std::vector<std::string> folderNames;
+    if (fs::is_directory(path)) {
+        typedef std::vector<fs::path> vec;
+        vec v;
+        std::copy(fs::directory_iterator(path), fs::directory_iterator(), std::back_inserter(v));
+        for (vec::const_iterator it(v.begin()), it_end(v.end()); it != it_end; it++) {
+            if (fs::is_directory(*it)) {
+                folderNames.push_back(it->filename().string());
+            }
+        }
+    }
+    return folderNames;
+}
+
+bool checkFolder(std::string const &inPath){
+    namespace fs = boost::filesystem;
+    fs::path path(inPath);
+    if (!fs::exists(path)) {
+        fs::create_directories(path);
+    }
+    return true;
+}
+
+// -----------------------------------------------------
+// ---------------      Armadillo System      ---------------
+// -----------------------------------------------------
+arma::uvec allIndex(arma::uword s){
+    arma::uvec index;
+    index.resize((arma::uword)s);
+    for(int i = 0; i < s; i++){
+        index[i] = i;
+    }
+    return index;
+}
+
+arma::uvec everyNIndex(arma::uword start, arma::uword end, arma::uword step){
+    std::vector<arma::uword> container;
+    for (arma::uword i = start; i < end; i = i + step) {
+        container.push_back(i);
+    }
+    arma::uvec index(container);    
+    return index;
+    
+}
