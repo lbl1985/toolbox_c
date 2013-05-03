@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Binlong Li. All rights reserved.
 //
 
+#include "stdafx.h"
 #include "util.h"
 
 // -----------------------------------------------------
@@ -207,6 +208,7 @@ void FeatureUtil::keptKPId(const std::vector<cv::KeyPoint> &cKP, const std::vect
 // -----------------------------------------------------
 // ---------------      File System      ---------------
 // -----------------------------------------------------
+// fullfile require c_str() c-style input
 std::string fullfile(int num, ...){
     va_list arguments;
     va_start(arguments, num);
@@ -217,7 +219,8 @@ std::string fullfile(int num, ...){
     }
     va_end(arguments);
     
-    return p.make_preferred().native();
+	//boost::filesystem::path p_tmp = p.make_preferred();
+    return p.make_preferred().string();
 }
 
 std::string to_regex_copy(std::string const &mask){

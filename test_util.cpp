@@ -131,6 +131,9 @@ bool fullfileTest(){
 // ---------------  TEST2: ls / folderList /checkFolder  -------------
 // -----------------------------------------------------
 // Not Test, just for usage example
+// fullfile requre c_str() (c style input) 
+// std::string imgFolder("/Users/herbert19lee/Dropbox/Upper_Body_Data/img");
+// std::vector<std::string> vec = ls( fullfile(2, imgFolder.c_str(), "*.jpg") );
 //std::vector<std::string> vec = ls(fullfile(2, "/Users/herbert19lee/Dropbox/Upper_Body_Data/img", "*.jpg"));
 //BOOST_FOREACH(std::string s, vec){
 //    std::cout << s << std::endl;
