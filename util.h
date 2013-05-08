@@ -10,14 +10,20 @@
 #define __seed__util__
 
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 #include <stack>
+#include <deque>
+#include <queue>
+#include <array>
+#include <algorithm>
+#include <limits>
+#include <tuple>
+
 #include <utility>
 #include <iomanip>
 #include <exception>
 #include <iterator>
-#include <algorithm>
 #include <cmath>
 #include <cstdarg>
 #include <opencv2/opencv.hpp>
@@ -28,6 +34,21 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/foreach.hpp>
 #include <armadillo>
+
+#ifdef _WIN32 || _WIN64
+#include "in_out_exist_utility.h"
+#endif
+
+#include <fftw3.h>
+#include <fstream>
+#include <stdlib.h>
+#include <io.h>
+#include <math.h>
+#include <omp.h>
+
+#include <tbb/tbb.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
 
 using namespace boost::lambda;
 
@@ -169,7 +190,5 @@ bool checkFolder(std::string const &path);
 
 arma::uvec allIndex(arma::uword s);
 arma::uvec everyNIndex(arma::uword start, arma::uword end, arma::uword step);
-
-
 
 #endif /* defined(__seed__helper__) */
