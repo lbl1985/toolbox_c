@@ -2,3 +2,10 @@ C++ Utility toolbox mainly developed for computer vision related applications.
 Require OpenCV, Boost
 
 <02-May-2013>
+
+* TODO record the setting up requirements under windows enviroment
+* DONE mergeTomUtil: merge the Util function from Tom as well. 
+  CLOSED: [2013-05-08 Wed 09:29]
+  - State "DONE"       from "TODO"       [2013-05-08 Wed 09:30] \\
+    only add the #ifdefine condition for now. Hopefull, it will skip some problem I will encounter in Mac OSX or Unix system.m
+  // For now, adding the #ifdefine _WIN32 || _WIN64 section
