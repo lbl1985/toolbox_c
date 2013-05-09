@@ -183,6 +183,20 @@ std::vector<std::string> ls(const std::string pcszMask);
 std::vector<std::string> folderList(std::string const &inPath);
 // check one path is exist or not, if not create it.
 bool checkFolder(std::string const &path);
+// num2str2 only accept long
+template <typename T>
+std::string num2str2(T in, int len){
+	std::stringstream ss;
+
+	if (in < 0)
+	{
+		ss << "-" << std::setw(len-1) << std::setfill('0') << -in;
+	}else{
+		ss << std::setw(len) << std::setfill('0') << in;
+	}	
+	
+	return ss.str();
+}
 
 // -----------------------------------------------------
 // ---------------      Armadillo System      ---------------
