@@ -56,6 +56,7 @@ int ImageResize(){
     for (int i = 1; i <= 3; i++) {
         cv::namedWindow(str[i-1], CV_WINDOW_AUTOSIZE);
         ImageUtil::resize(dst, src, 1/(pow(2, i)));
+        ImageUtil::resize(dst, src, 1/(cv::pow(static_cast<double>(2), static_cast<double>(i))));
         cv::imshow(str[i-1], dst);
     }
     cv::waitKey(0);
