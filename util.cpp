@@ -220,7 +220,7 @@ std::string fullfile(int num, ...){
     va_end(arguments);
     
 	//boost::filesystem::path p_tmp = p.make_preferred();
-    return p.make_preferred().string();
+    return p.generic_string();
 }
 
 std::string to_regex_copy(std::string const &mask){
