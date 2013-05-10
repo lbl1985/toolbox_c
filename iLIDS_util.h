@@ -18,6 +18,7 @@ struct BB{
 	cv::Rect_<double> rect;
 };
 
-deque<cv::Ptr<BB> >  readViper(const std::string *fileName);
+deque<cv::Ptr<BB> >  readViper_iLIDS(const std::string *fileName);
+void readViper_iLIDS_Attribute(const char *attrName, xml_node<> *object_node, deque<cv::Ptr<BB> > &boundingBox);
 
 #endif
