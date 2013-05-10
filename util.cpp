@@ -281,6 +281,31 @@ bool checkFolder(std::string const &inPath){
 }
 
 // -----------------------------------------------------
+// ---------------      Display System      ---------------
+// -----------------------------------------------------
+
+void DrawProgressBar(int len, double percent){
+	std::string progress;
+	bool firstSpace = true;
+	for (int i = 0; i < len; ++i) {
+		if (i < static_cast<int>(len * percent)) {
+			progress += "=";
+		} else {
+			if (firstSpace)
+			{
+				progress += ">";
+				firstSpace = false;
+			}
+			progress += " ";			
+		}
+	}
+	
+	std::printf("[%s] %d %% \r", progress.c_str(), static_cast<int>(100*percent));
+	std::flush(std::cout); // Required.
+}
+
+
+// -----------------------------------------------------
 // ---------------      Armadillo System      ---------------
 // -----------------------------------------------------
 arma::uvec allIndex(arma::uword s){
