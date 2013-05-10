@@ -118,6 +118,38 @@ bool sort_indexTest(){
     return true;
 }
 
+bool vec2cvMat_2DTest(){
+	// 2D vector to opencv mat conversion experiment
+	vector<vector<float> > test_float;
+	float f1[] = {1, 2, 3, 4, 5};
+	float f2[] = {2, 3, 4, 5, 6};
+	vector<float> tmpf1(f1, f1+5); test_float.push_back(tmpf1);
+	vector<float> tmpf2(f2, f2+5); test_float.push_back(tmpf2);
+
+	vector<vector<int> > test_int;
+	int i1[] = {3, 5, 2};
+	int i2[] = {8, 9, 10};
+	vector<int> tmpi1(i1, i1+3); test_int.push_back(tmpi1);
+	vector<int> tmpi2(i2, i2+3); test_int.push_back(tmpi2);
+		
+	cv::Mat_<float> testMat_float = vec2cvMat_2D(test_float);
+	cv::Mat_<float> ansMat_float = (cv::Mat_<float>(2, 5) << 1, 2, 3, 4, 5, 2, 3, 4, 5, 6);
+
+	cv::Mat_<int> testMat_int = vec2cvMat_2D(test_int);
+	cv::Mat_<int> ansMat_int = (cv::Mat_<int>(2, 3) << 3, 5, 2, 8, 9, 10);
+	
+	if (!BasicUtil::matIsEqual(testMat_float, ansMat_float))
+	{
+		return false;
+	}
+
+	if (!BasicUtil::matIsEqual(testMat_int, ansMat_int))
+	{
+		return false;
+	}
+	return true;
+}
+
 // -----------------------------------------------------
 // --------------- TEST: FileUtil Class ---------------
 // -----------------------------------------------------
@@ -212,6 +244,12 @@ int main(){
     
     if(!num2str2Test()){
 		std::cerr << "num2str2Test Failed" << std::endl;
+		allPass = false;
+	}
+
+	if (!vec2cvMat_2DTest())
+	{
+		std::cerr << "vec2cvMat_2DTest Failed" << std::endl;
 		allPass = false;
 	}
 
