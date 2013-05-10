@@ -38,6 +38,7 @@
 #ifdef _WIN32 || _WIN64
 #include "in_out_exist_utility.h"
 #endif
+#include "iLIDS_util.h"
 
 #include <fftw3.h>
 #include <fstream>
