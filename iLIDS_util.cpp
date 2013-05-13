@@ -2,7 +2,7 @@
 #include "iLIDS_util.h"
 #include "util.h"
 
-cv::Mat_<float> readViper_iLIDS(const std::string *fileName){
+vector<cv::Mat_<float> > readViper_iLIDS(const std::string *fileName){
 	xml_document<> doc;
 	ifstream theFile(*fileName);
 
@@ -13,18 +13,30 @@ cv::Mat_<float> readViper_iLIDS(const std::string *fileName){
 	xml_node<> *viper_node = doc.first_node("viper");
 	xml_node<> *data_node_out = viper_node->first_node("data");
 	xml_node<> *source_node = data_node_out -> first_node("sourcefile");
-
-	//deque<cv::Ptr<BB> > boundingBox;
-	vector<vector<float> > tar_vBB;
+		
+	vector<cv::Mat_<float> > personBB;
 	for (xml_node<> *object_node = source_node->first_node("object"); object_node; object_node = object_node -> next_sibling())
 	{
 		if (strcmp(object_node->first_attribute("name")->value(), "Target") == 0){
-			 tar_vBB = readViper_iLIDS_Attribute("BOUNDING-BOX", object_node);
+			cv::Mat_<float> pBB = readViper_iLIDS_Object(object_node);
+			personBB.push_back(pBB);
 		}
-
-		//readViper_iLIDS_Attribute("OCCLUDED-BOUNDING-BOX", object_node, boundingBox);
 	}
 
+	return personBB;
+}
+
+cv::Mat_<float> readViper_iLIDS_Object(xml_node<> *object_node){
+	vector<vector<float> > tar_vBB;
+	vector<vector<float> > vBB = readViper_iLIDS_Attribute("BOUNDING-BOX", object_node);
+	vector<vector<float> > vOBB = readViper_iLIDS_Attribute("OCCLUDED-BOUNDING-BOX", object_node);
+	vector<vector<float> > vIBB = readViper_iLIDS_Attribute("INITIAL-BOUNDING-BOX", object_node);
+	vector<vector<float> > vIOBB = readViper_iLIDS_Attribute("INITIAL-OCCLUDED-BOUNDING-BOX", object_node);
+	tar_vBB = vBB;
+	tar_vBB.insert(tar_vBB.end(), vOBB.begin(), vOBB.end());
+	tar_vBB.insert(tar_vBB.end(), vIBB.begin(), vIBB.end());
+	tar_vBB.insert(tar_vBB.end(), vIOBB.begin(), vIOBB.end());
+	sort2DVec(tar_vBB, 0);
 	return vec2cvMat_2D(tar_vBB);
 }
 

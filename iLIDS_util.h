@@ -13,12 +13,9 @@
 
 using namespace std;
 using namespace rapidxml;
-struct BB{
-	unsigned int fnum;
-	cv::Rect_<double> rect;
-};
 
-cv::Mat_<float> readViper_iLIDS(const std::string *fileName);
+vector<cv::Mat_<float> > readViper_iLIDS(const std::string *fileName);
+cv::Mat_<float> readViper_iLIDS_Object(xml_node<> *object_node);
 vector<vector<float> > readViper_iLIDS_Attribute(const char *attrName, xml_node<> *object_node);
 
 #endif
