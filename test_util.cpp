@@ -150,6 +150,39 @@ bool vec2cvMat_2DTest(){
 	return true;
 }
 
+bool sort2DVecTest(){
+	int a[] = {2, 5, 6};	vector<int> vec1(a, a+3);
+	int b[] = {-1, 3, 9};	vector<int> vec2(b, b+3);
+	int c[] = {0, 9, 7};	vector<int> vec3(c, c+3);
+
+	vector<vector<int> > testVec;
+	vector<vector<int> > ansVec1; 
+
+	testVec.push_back(vec1); testVec.push_back(vec2); testVec.push_back(vec3);
+	ansVec1.push_back(vec2); ansVec1.push_back(vec3); ansVec1.push_back(vec1);
+
+	sort2DVec(testVec, 0);
+	cv::Mat_<int> testMat1 = vec2cvMat_2D(testVec);
+	cv::Mat_<int> ansMat1 = vec2cvMat_2D(ansVec1);
+
+	if (!BasicUtil::matIsEqual(testMat1, ansMat1))
+	{
+		return false;
+	}
+
+	sort2DVec(testVec, 1);
+	vector<vector<int> > ansVec2;
+	ansVec2.push_back(vec2); ansVec2.push_back(vec1); ansVec2.push_back(vec3);
+	cv::Mat_<int> testMat2 = vec2cvMat_2D(testVec);
+	cv::Mat_<int> ansMat2 = vec2cvMat_2D(ansVec2);
+
+	if (!BasicUtil::matIsEqual(testMat2, ansMat2))
+	{
+		return false;
+	}
+
+	return true;
+}
 // -----------------------------------------------------
 // --------------- TEST: FileUtil Class ---------------
 // -----------------------------------------------------
@@ -206,24 +239,8 @@ bool num2str2Test(){
 
 // main controller function
 int main(){
+	
 
-	/*std::string testName("fullfileTest");
-
-	if (testName.compare("VideoShow") == 0) {
-	VideoShowTest();
-	}else if (testName.compare("VideoSave") == 0){
-	VideoSaveTest();
-	}else if (testName.compare("ImageResize") == 0){
-	ImageResize();
-	}else if (testName.compare("minValueIndex") == 0){
-	minValueIndexTest();
-	}else if (testName.compare("combineTwoImages") == 0){
-	combineTwoImagesTest();
-	}else if (testName.compare("sort_indexTest") == 0){
-	sort_indexTest();
-	}else if (testName.compare("fullfileTest") == 0){
-	fullfileTest();
-	}*/
 	bool allPass = true;
 	if (!minValueIndexTest())
 	{
@@ -250,6 +267,12 @@ int main(){
 	if (!vec2cvMat_2DTest())
 	{
 		std::cerr << "vec2cvMat_2DTest Failed" << std::endl;
+		allPass = false;
+	}
+
+	if (!sort2DVecTest())
+	{
+		std::cerr<< "sort2DVecTest Failed" << std::endl;
 		allPass = false;
 	}
 

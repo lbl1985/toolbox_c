@@ -129,6 +129,29 @@ cv::Mat_<T> vec2cvMat_2D(std::vector< std::vector<T> > &inVec){
 	return resmat;
 }
 
+template <typename T>
+class SortVec{
+private: 
+	unsigned int fieldId;
+public:
+	SortVec(int _fieldId = 0):fieldId(_fieldId){}
+	bool operator() (vector<T> vec1, vector<T> vec2){ 
+		if (fieldId >= vec1.size())
+		{
+			std::cerr << "fieldId number is >= size of vec" << std::endl;
+			throw myexception("fieldId number is >= size of vec");
+		}
+		return vec1[fieldId] < vec2[fieldId];
+	} 
+};
+
+// sort 2D vector according to the fieldId of each row vector
+template <typename T> 
+void sort2DVec(vector<vector<T> > &vec, unsigned int fieldId = 0){
+	SortVec<T> mySort(fieldId);
+	sort(vec.begin(), vec.end(), mySort);
+}
+
 // -----------------------------------------------------
 // ---------------     Basic System      ---------------
 // -----------------------------------------------------
@@ -217,6 +240,16 @@ std::string num2str2(T in, int len){
 // -----------------------------------------------------
 
 void DrawProgressBar(int len, double percent);
+
+template <typename T>
+void print2DVect(std::vector<std::vector<T> > const &vec){
+	BOOST_FOREACH(std::vector<T> v, vec){
+		BOOST_FOREACH(T data, v){
+			std::cout << data << " ";
+		}
+		std::cout << std::endl;
+	}
+}
 
 // -----------------------------------------------------
 // ---------------      Armadillo System      ---------------
