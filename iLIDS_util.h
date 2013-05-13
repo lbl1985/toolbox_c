@@ -14,8 +14,8 @@
 using namespace std;
 using namespace rapidxml;
 
-vector<cv::Mat_<float> > readViper_iLIDS(const std::string *fileName);
-cv::Mat_<float> readViper_iLIDS_Object(xml_node<> *object_node);
+vector<cv::Mat_<float> > readViper_iLIDS(const std::string *fileName, const vector<string> &_attrNames);
+cv::Mat_<float> readViper_iLIDS_Object(xml_node<> *object_node, const vector<string> &attrNames);
 vector<vector<float> > readViper_iLIDS_Attribute(const char *attrName, xml_node<> *object_node);
 
 #endif
