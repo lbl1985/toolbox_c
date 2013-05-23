@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 Binlong Li. All rights reserved.
 //
 
+#ifdef __AFXWIN_H__
 #include "stdafx.h"
+#endif
 #include "util.h"
 
 // -----------------------------------------------------
