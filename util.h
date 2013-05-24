@@ -118,6 +118,10 @@ public:
 
 template <typename T>
 cv::Mat_<T> vec2cvMat_2D(std::vector< std::vector<T> > &inVec){
+	if (inVec.empty())
+	{
+		return cv::Mat_<T>();
+	}
 	int rows = static_cast<int>(inVec.size());
 	int cols = static_cast<int>(inVec[0].size());
 
